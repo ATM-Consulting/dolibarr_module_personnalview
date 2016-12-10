@@ -105,6 +105,12 @@ class Actionspersonalview
 								$table.find('>tbody>tr').each(function(i, item) {
 									var $item = $(item);
 									$item.attr('pview-row', i);
+									$item.addClass('PSRow');
+								});
+								
+								$table.sortable({
+									items:'.PSRow'
+									,placeholder: "sortable-placeholder"
 								});
 						});
 						<?php
@@ -112,10 +118,15 @@ class Actionspersonalview
 						foreach($ps->TField as &$row) {
 							$iTable = $row['iTable'];
 							$iRow = $row['iRow'];
+							$position = $row['position'];	
 								
 							if(!empty($row['bold'])) echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").addClass("PSBolder");';
 							if(!empty($row['hide'])) echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").addClass("PSHidden");';
 							if(!empty($row['color'])) {echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").addClass("PSColor").attr("ps-color","'.$row['color'].'").css("background-color","#'.$row['color'].'");';
+							if($position>=0) {
+								echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").attr("prow-position",'.$position.');';
+							}
+							
 							
 							}
 						}
@@ -179,11 +190,12 @@ class Actionspersonalview
 							$(table).find('tr[pview-row]').each(function(i,item) {
 								$item = $(item);
 								//console.log($item,it,i);
-								var row = { iTable : it, iRow : i, color:'',hide:0,bold:0  };
+								var row = { iTable : it, iRow : i, color:'',hide:0,bold:0, position:-1  };
 								
 								if($item.hasClass('PSBolder')) row.bold = 1;
 								if($item.hasClass('PSHidden')) row.hide = 1;
 								if($item.hasClass('PSColor')) row.color = $item.attr('ps-color');
+								row.position = $item.attr('pview-row');
 								
 								TField.push(row);		
 							});

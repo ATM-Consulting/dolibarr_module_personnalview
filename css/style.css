@@ -6,7 +6,10 @@
 	background-color:#ff0000;
 	text-decoration:line-through;	
 }
-
+.sortable-placeholder {
+	border:1px dashed #000;
+	background-color: yellow;
+}
 .PSBolder td {
 	font-weight: bold;
 }
