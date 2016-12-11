@@ -76,6 +76,10 @@ class Actionspersonalview
 			echo '<a rel="exist" href="javascript:personalview.edit();">'.img_picto($langs->trans('EditViewSaved'), 'personalview-saved@personalview',' style="width:16px;" ').'</a>';
 			echo '</div>';
 			
+			define('INC_FROM_DOLIBARR',1);
+			dol_include_once('/personalview/config.php');
+			dol_include_once('/personalview/class/ps.class.php');
+			
 			?>
 			<script src="<?php echo dol_buildpath('/personalview/lib/colorPicker/jqColorPicker.min.js',1); ?>" type="text/javascript"></script>
 			<script type="text/javascript">
@@ -84,10 +88,6 @@ class Actionspersonalview
 					$('#personalviewbuttons').prependTo('div.login_block div.login_block_other').show();
 						
 					<?php
-					
-					define('INC_FROM_DOLIBARR',1);
-					dol_include_once('/personalview/config.php');
-					dol_include_once('/personalview/class/ps.class.php');
 					
 					$PDOdb=new TPDOdb;
 					$ps=new TPersonalView;
@@ -113,21 +113,31 @@ class Actionspersonalview
 									,placeholder: "sortable-placeholder"
 								});
 						});
+						
 						<?php
 						
 						foreach($ps->TField as &$row) {
 							$iTable = $row['iTable'];
 							$iRow = $row['iRow'];
-							$position = $row['position'];	
+							$position = (int)$row['position'];	
+							echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").attr("prow-position",'.$position.');'."\n";
+						}
+						
+						?>
+						
+						PS_sort_row_by_position();
+						
+						<?php
+						
+						foreach($ps->TField as &$row) {
+							$iTable = $row['iTable'];
+							$iRow = $row['iRow'];
+							$position = (int)$row['position'];	
 								
-							if(!empty($row['bold'])) echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").addClass("PSBolder");';
-							if(!empty($row['hide'])) echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").addClass("PSHidden");';
-							if(!empty($row['color'])) {echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").addClass("PSColor").attr("ps-color","'.$row['color'].'").css("background-color","#'.$row['color'].'");';
-							if($position>=0) {
-								echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").attr("prow-position",'.$position.');';
-							}
-							
-							
+							if(!empty($row['bold'])) echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").addClass("PSBolder");'."\n";
+							if(!empty($row['hide'])) echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").addClass("PSHidden");'."\n";
+							if(!empty($row['color'])) {
+								echo '$("table[pview-table='.$iTable.'] tr[pview-row='.$iRow.']").addClass("PSColor").attr("ps-color","'.$row['color'].'").css("background-color","#'.$row['color'].'");'."\n";
 							}
 						}
 						
@@ -143,6 +153,30 @@ class Actionspersonalview
 					?>
 					$('div.fiche').show();
 				});
+				
+				function PS_sort_row_by_position() {
+					/*
+					 $("table[pview-table] tr[pview-row][prow-position]").each(function(i,item) {
+					 		
+					 });
+					var TElement = [];
+					
+					  // Populate the array
+					  for(var i = 0, l = lis.length; i < l; i++)
+					    vals.push(lis[i].innerHTML);
+					
+					  // Sort it
+					  vals.sort();
+					
+					  // Sometimes you gotta DESC
+					  if(sortDescending)
+					    vals.reverse();
+					
+					  // Change the list on the page
+					  for(var i = 0, l = lis.length; i < l; i++)
+					    lis[i].innerHTML = vals[i];
+					*/
+				}
 				
 				var personalview = {
 					
