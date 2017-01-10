@@ -154,7 +154,36 @@ class Actionspersonalview
 					$('div.fiche').show();
 				});
 				
+				function sortTable($table){
+					var rows = $table.find('>tbody>tr').get();
+
+					rows.sort(function(a, b) {
+
+						var A = parseInt($(a).attr('ok'));
+						var B = parseInt($(b).attr('ok'));
+
+						if(A == 0) {
+							return -1;
+						}
+						else if(A == 1 && B==0) {
+							return 1;
+						}
+						
+
+						return 0;
+					});
+
+					$.each(rows, function(index, row) {
+						$table.children('tbody').append(row);
+					});
+				}
+				
 				function PS_sort_row_by_position() {
+
+
+					
+					
+
 					/*
 					 $("table[pview-table] tr[pview-row][prow-position]").each(function(i,item) {
 					 		
